@@ -18,6 +18,8 @@ import {
 import { calculateNextInvoiceDate } from '../services/recurringService'
 import { Invoice, InvoiceFormData, RecurringInvoice } from '../types/invoice'
 import type { RecurringConfig } from '../components/invoice/RecurringSettings'
+import { useRateLimit, RATE_LIMITS } from '../hooks/useRateLimit'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -55,8 +57,15 @@ const CreateInvoice: React.FC = () => {
   const navigate = useNavigate()
   const [invoice, setInvoice] = useState<Invoice | null>(null)
   const [, setIsLoading] = useState(false)
+  const { checkLimit } = useRateLimit(RATE_LIMITS.INVOICE_CREATION)
+  const { trackInvoiceCreated } = useAnalytics()
 
   const handleSubmit = async (data: InvoiceFormData, recurringConfig?: RecurringConfig) => {
+    // Check rate limit
+    if (!checkLimit()) {
+      return
+    }
+    
     try {
       setIsLoading(true)
 
@@ -120,6 +129,9 @@ const CreateInvoice: React.FC = () => {
       // Save invoice
       const savedInvoice = await saveInvoice(newInvoice)
       setInvoice(savedInvoice)
+      
+      // Track analytics
+      trackInvoiceCreated(savedInvoice)
       
       toast.success('Invoice created successfully!')
     } catch (error) {

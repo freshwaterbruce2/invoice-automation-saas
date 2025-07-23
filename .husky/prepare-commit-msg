@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+# Get the current branch name
+BRANCH=$(git symbolic-ref --short HEAD)
+
+# Extract ticket number if branch follows pattern like feature/INVOICE-123-description
+TICKET=$(echo $BRANCH | grep -Eo '[A-Z]+-[0-9]+' | head -1)
+
+# Get the commit message file
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+# Only add ticket number if this is not a merge/squash/amend
+if [ -z "$COMMIT_SOURCE" ] && [ -n "$TICKET" ]; then
+  # Check if ticket number is already in the message
+  if ! grep -q "$TICKET" "$COMMIT_MSG_FILE"; then
+    # Prepend ticket number to commit message
+    echo "[$TICKET] $(cat $COMMIT_MSG_FILE)" > $COMMIT_MSG_FILE
+  fi
+fi
