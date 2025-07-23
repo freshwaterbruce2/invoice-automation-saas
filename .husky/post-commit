@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Generate changelog entry
+echo "📝 Updating changelog..."
+git log -1 --pretty=format:"%h - %s (%cr) <%an>" >> CHANGELOG.md
+
+# Update project stats
+echo "📊 Updating project statistics..."
+node scripts/update-stats.js
+
+echo "✅ Post-commit tasks completed!"

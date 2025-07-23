@@ -8,6 +8,7 @@ import { InvoiceFormData } from '../../types/invoice'
 import Button from '../common/Button'
 import Card from '../common/Card'
 import Input from '../common/Input'
+import { usePerformanceMonitor } from '../../hooks/usePerformanceMonitor'
 
 import RecurringSettings, { RecurringConfig } from './RecurringSettings'
 
@@ -122,6 +123,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onSubmit }) => {
     startDate: new Date().toISOString().split('T')[0],
     endType: 'never',
   })
+  const { measureAction } = usePerformanceMonitor('InvoiceForm', { recurringEnabled: recurringConfig.enabled })
   
   const { register, control, handleSubmit, watch, formState: { errors } } = useForm<InvoiceFormData>({
     defaultValues: {
@@ -151,14 +153,16 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onSubmit }) => {
   const total = subtotal + taxAmount
 
   const handleFormSubmit = (data: InvoiceFormData) => {
-    const enrichedData = {
-      ...data,
-      items: data.items.map(item => ({
-        ...item,
-        total: (Number(item.quantity) || 0) * (Number(item.price) || 0)
-      }))
-    }
-    onSubmit(enrichedData, recurringConfig.enabled ? recurringConfig : undefined)
+    measureAction('submitInvoice', () => {
+      const enrichedData = {
+        ...data,
+        items: data.items.map(item => ({
+          ...item,
+          total: (Number(item.quantity) || 0) * (Number(item.price) || 0)
+        }))
+      }
+      onSubmit(enrichedData, recurringConfig.enabled ? recurringConfig : undefined)
+    })
   }
 
   return (

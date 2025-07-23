@@ -13,6 +13,7 @@ import { theme } from '../config/theme'
 import { formatCurrency,getInvoices } from '../services/invoiceService'
 import { pauseRecurringInvoice, resumeRecurringInvoice } from '../services/recurringService'
 import { Invoice } from '../types/invoice'
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -187,20 +188,23 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate()
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { measureAction } = usePerformanceMonitor('Dashboard', { invoiceCount: invoices.length })
 
   useEffect(() => {
     loadInvoices()
   }, [])
 
   const loadInvoices = async () => {
-    try {
-      const data = await getInvoices()
-      setInvoices(data)
-    } catch (error) {
-      console.error('Failed to load invoices:', error)
-    } finally {
-      setIsLoading(false)
-    }
+    measureAction('loadInvoices', async () => {
+      try {
+        const data = await getInvoices()
+        setInvoices(data)
+      } catch (error) {
+        console.error('Failed to load invoices:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    })
   }
 
   const calculateStats = () => {
