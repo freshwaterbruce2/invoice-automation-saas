@@ -25,8 +25,8 @@ class MockAPI {
           phone: '+1234567890',
           address: '123 Business St, City, State 12345'
         },
-        issueDate: new Date('2024-01-15').toISOString(),
-        dueDate: new Date('2024-02-15').toISOString(),
+        issueDate: new Date('2024-01-15'),
+        dueDate: new Date('2024-02-15'),
         status: 'paid',
         items: [
           {
@@ -47,9 +47,10 @@ class MockAPI {
         subtotal: 8400,
         tax: 840,
         total: 9240,
+        currency: 'USD',
         notes: 'Thank you for your business!',
-        createdAt: new Date('2024-01-15').toISOString(),
-        updatedAt: new Date('2024-01-20').toISOString()
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-20')
       },
       {
         id: '2',
@@ -61,8 +62,8 @@ class MockAPI {
           phone: '+1987654321',
           address: '456 Innovation Ave, Tech City, TC 54321'
         },
-        issueDate: new Date('2024-01-20').toISOString(),
-        dueDate: new Date('2024-02-20').toISOString(),
+        issueDate: new Date('2024-01-20'),
+        dueDate: new Date('2024-02-20'),
         status: 'sent',
         items: [
           {
@@ -76,15 +77,19 @@ class MockAPI {
         subtotal: 14000,
         tax: 1400,
         total: 15400,
-        recurringConfig: {
+        currency: 'USD',
+        recurring: {
           enabled: true,
           frequency: 'monthly',
           interval: 1,
-          startDate: '2024-01-20',
+          startDate: new Date('2024-01-20'),
+          endDate: undefined,
+          occurrences: undefined,
+          nextInvoiceDate: new Date('2024-02-20'),
           endType: 'never'
         },
-        createdAt: new Date('2024-01-20').toISOString(),
-        updatedAt: new Date('2024-01-20').toISOString()
+        createdAt: new Date('2024-01-20'),
+        updatedAt: new Date('2024-01-20')
       }
     ]
 
@@ -136,8 +141,8 @@ class MockAPI {
     const newInvoice: Invoice = {
       ...invoice,
       id: `inv-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
     
     this.invoices.set(newInvoice.id, newInvoice)
@@ -153,7 +158,7 @@ class MockAPI {
     const updatedInvoice = {
       ...invoice,
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date()
     }
     
     this.invoices.set(id, updatedInvoice)
@@ -195,8 +200,8 @@ class MockAPI {
     const updatedInvoice = {
       ...invoice,
       status: 'paid' as const,
-      paidAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      paidAt: new Date(),
+      updatedAt: new Date()
     }
     
     this.invoices.set(invoiceId, updatedInvoice)

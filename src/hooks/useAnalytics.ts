@@ -12,7 +12,6 @@ interface AnalyticsEvent {
 // Mock analytics service - replace with real service (GA4, Mixpanel, etc.)
 class AnalyticsService {
   private static instance: AnalyticsService
-  private userId: string | null = null
 
   static getInstance() {
     if (!AnalyticsService.instance) {
@@ -22,7 +21,6 @@ class AnalyticsService {
   }
 
   identify(userId: string, traits?: Record<string, any>) {
-    this.userId = userId
     if (import.meta.env.DEV) {
       console.log('[Analytics] Identify:', userId, traits)
     }
