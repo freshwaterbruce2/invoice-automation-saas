@@ -1,6 +1,13 @@
 # InvoiceFlow - Modern Invoice Automation SaaS
 
-A powerful invoice automation platform that helps businesses get paid 3x faster and save 70% on invoice processing costs.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18.0-blue" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vite-5.0-purple" alt="Vite">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
+
+A powerful invoice automation platform that helps businesses get paid 3x faster and save 70% on invoice processing costs. Built with React, TypeScript, and modern web technologies.
 
 ## Features
 
