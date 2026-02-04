@@ -21,7 +21,7 @@
     "date-fns": "^3.6.0",
     "framer-motion": "^11.0.0",
     "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
+    "jspdf": "^4.1.0",
     "lucide-react": "^0.365.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
